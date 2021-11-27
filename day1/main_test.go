@@ -21,3 +21,18 @@ func TestDay1Part1(t *testing.T) {
 		assert.Equal(t, expected, actual)
 	})
 }
+
+func TestDay1Part2(t *testing.T) {
+	t.Run(`works on a small example`, func(t *testing.T) {
+		numbers := []int{
+			14,     // 2
+			1969,   // 966
+			100756, // 50346
+		}
+
+		expected := 51314
+		actual := Day1Part2(numbers)
+
+		assert.Equal(t, expected, actual)
+	})
+}
