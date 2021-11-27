@@ -17,15 +17,23 @@ func ReadInput(path string) ([]byte, error) {
 }
 
 func ReadInputToList(path string) ([]string, error) {
+	return ReadInputToListWithSeperator(path, "\n")
+}
+
+func ReadInputToListWithSeperator(path string, seperator string) ([]string, error) {
 	contents, err := ReadInput(path)
 	if err != nil {
 		return nil, err
 	}
-	return strings.Split(strings.TrimSpace(string(contents)), "\n"), nil
+	return strings.Split(strings.TrimSpace(string(contents)), seperator), nil
 }
 
 func ReadInputToIntegerList(path string) ([]int, error) {
-	rows, err := ReadInputToList(path)
+	return ReadInputToIntegerListWithSeperator(path, "\n")
+}
+
+func ReadInputToIntegerListWithSeperator(path string, seperator string) ([]int, error) {
+	rows, err := ReadInputToListWithSeperator(path, seperator)
 	if err != nil {
 		return nil, err
 	}
