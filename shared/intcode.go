@@ -44,6 +44,8 @@ func (i *Intcode) Step() (intcode *Intcode, halted bool) {
 
 	if instruction == 1 {
 		return i.Add(), false
+	} else if instruction == 2 {
+		return i.Multiply(), false
 	}
 
 	return i, true
@@ -56,6 +58,18 @@ func (i *Intcode) Add() *Intcode {
 
 	sum := i.GetValue(a) + i.GetValue(b)
 	i.SetValue(c, sum)
+	i.MovePointer(4)
+
+	return i
+}
+
+func (i *Intcode) Multiply() *Intcode {
+	a := i.memory[i.pointer+1]
+	b := i.memory[i.pointer+2]
+	c := i.memory[i.pointer+3]
+
+	product := i.GetValue(a) * i.GetValue(b)
+	i.SetValue(c, product)
 	i.MovePointer(4)
 
 	return i
