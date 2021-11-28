@@ -1,26 +1,44 @@
 package shared
 
 type Intcode struct {
-	memory  []int
-	pointer int
+	memory         []int
+	originalMemory []int
+	pointer        int
 }
 
 func NewIntcode(memory []int) *Intcode {
-	return &Intcode{
-		memory:  memory,
-		pointer: 0,
+	originalMemory := make([]int, len(memory))
+	copy(originalMemory, memory)
+	i := &Intcode{
+		memory:         []int{},
+		originalMemory: originalMemory,
+		pointer:        0,
 	}
+	i.SetMemory(memory)
+	return i
+}
+
+func (i *Intcode) Reset() *Intcode {
+	i.pointer = 0
+	i.SetMemory(i.originalMemory)
+	return i
 }
 
 func (i *Intcode) GetMemory() []int {
 	return i.memory
 }
 
-func (i *Intcode) GetValue(index int) int {
+func (i *Intcode) SetMemory(memory []int) *Intcode {
+	i.memory = make([]int, len(memory))
+	copy(i.memory, memory)
+	return i
+}
+
+func (i *Intcode) GetAddress(index int) int {
 	return i.memory[index]
 }
 
-func (i *Intcode) SetValue(index, value int) *Intcode {
+func (i *Intcode) SetAddress(index, value int) *Intcode {
 	i.memory[index] = value
 	return i
 }
@@ -28,6 +46,15 @@ func (i *Intcode) SetValue(index, value int) *Intcode {
 func (i *Intcode) MovePointer(delta int) *Intcode {
 	i.pointer += delta
 	return i
+}
+
+func (i *Intcode) SetPointer(value int) *Intcode {
+	i.pointer = value
+	return i
+}
+
+func (i *Intcode) GetPointer() int {
+	return i.pointer
 }
 
 func (i *Intcode) Run() *Intcode {
@@ -56,8 +83,8 @@ func (i *Intcode) Add() *Intcode {
 	b := i.memory[i.pointer+2]
 	c := i.memory[i.pointer+3]
 
-	sum := i.GetValue(a) + i.GetValue(b)
-	i.SetValue(c, sum)
+	sum := i.GetAddress(a) + i.GetAddress(b)
+	i.SetAddress(c, sum)
 	i.MovePointer(4)
 
 	return i
@@ -68,8 +95,8 @@ func (i *Intcode) Multiply() *Intcode {
 	b := i.memory[i.pointer+2]
 	c := i.memory[i.pointer+3]
 
-	product := i.GetValue(a) * i.GetValue(b)
-	i.SetValue(c, product)
+	product := i.GetAddress(a) * i.GetAddress(b)
+	i.SetAddress(c, product)
 	i.MovePointer(4)
 
 	return i
